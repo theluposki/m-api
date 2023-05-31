@@ -1,8 +1,17 @@
+<script setup>
+import { computed } from 'vue'
+import { useUserStore } from '../../stores/user.js'
+
+const store = useUserStore()
+
+const user = computed(() => store.user)
+</script>
+
 <template>
   <footer class="footer">
     <div class="users-conected">
-      <i class='bx bxs-user'></i> 
-      <span>0</span>
+      <i class='bx bxs-user' v-if="user.nickname"></i> 
+      <span v-if="user.nickname">0</span>
     </div>
     <span class="copy">&copy; 2023 MyReb. Todos os direitos reservados.</span>
   </footer>

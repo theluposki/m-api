@@ -6,6 +6,11 @@ const password = ref("")
 const lock = ref(true)
 const check = ref(false)
 const message = ref("")
+const loading = ref(false)
+
+import { useUserStore } from '../../stores/user.js'
+
+const store = useUserStore()
 
 const toggleLock = () => {
   const password = document.getElementById("password")
@@ -16,6 +21,16 @@ const toggleLock = () => {
   } else {
     lock.value = true
     password.type = "password"
+  }
+}
+
+const signIn = async () => {
+  loading.value = true
+  const result = await store.signIn(email.value, password.value)
+  if(result) {
+    loading.value = false
+    message.value = result.message
+    console.log(result)
   }
 }
 </script>
@@ -46,13 +61,13 @@ const toggleLock = () => {
         <label for="check">lembra usuário e senha</label>
       </div>
 
-      <Loading />
+      <Loading v-if="loading"/>
 
-      <span class="message" v-if="false">{{ message }}</span>
+      <span class="message" v-if="!loading">{{ message }}</span>
 
       <div class="form-buttoms">
         <a href="#">esqueci minha senha</a>
-        <button>Logar</button>
+        <button @click="signIn">Logar</button>
       </div>
     </div>
 
