@@ -74,10 +74,21 @@ body {
 }
 
 .page {
+  position: relative;
   min-height: calc(100vh - 74.4px);
   max-height: calc(100vh - 74.4px);
   overflow-x: hidden;
   overflow-y: auto;
   background-color: var(--dark2);
   color: var(--white);
+}
+
+.page-int {
+  min-height: calc(100vh - 74.4px - 60px);
+  max-height: calc(100vh - 74.4px - 60px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--dark2);
+  color: var(--white);
+  background-color: red;
 }

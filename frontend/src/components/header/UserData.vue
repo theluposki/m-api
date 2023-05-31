@@ -67,7 +67,6 @@ const isVisibleMenu = computed(() => store.isVisibleMenu)
 
 .user img:active {
   scale: 0.95;
-  /*375*/
 } 
 
 .btnMenu {

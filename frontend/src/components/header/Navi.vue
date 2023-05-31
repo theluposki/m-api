@@ -35,6 +35,14 @@ const signOut = () => {
     </div>
 
     <div 
+      :class="pathname === '/contacts' ? 'nav-link active' : 'nav-link' "
+      @click="setLink('/contacts/list')"
+      >
+      <i class='bx bxs-contact' ></i>
+      <span>Contatos</span>
+    </div>
+
+    <div 
       :class="pathname === '/about' ? 'nav-link active' : 'nav-link' "
       @click="setLink('/about')"
       >
