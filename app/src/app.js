@@ -11,7 +11,9 @@ import error from "./middlewares/error.js"
 
 /* Import Routes*/
 
-import AuthRouter from './routes/auth.js'
+import AuthRouter from './routes/auth/auth.js'
+import RegisterRouter from "./routes/auth/register.js"
+import UsersRouter from "./routes/users/profile.js"
 
 /* App */
 const app = express()
@@ -30,6 +32,8 @@ app.use("/", express.static("src/public"))
 
 /* Routes */
 app.use(`${v1}/auth`, AuthRouter)
+app.use(`${v1}/register`, RegisterRouter)
+app.use(`${v1}/users`, UsersRouter)
 
 app.use(error)
 /* Export App */
