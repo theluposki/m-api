@@ -159,7 +159,7 @@ background-color:green;
 }
 
 label {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: var(--blue-l);
 }
 
@@ -171,11 +171,12 @@ label {
   border-bottom: solid 1px var(--blue-l);
   color: var(--white);
   caret-color: var(--blue-l);
+  font-size: 1.6rem;
   outline: none;
 }
 
 .input::placeholder {
-  color: var(--blue-l);
+  color: #555;
 }
 
 .lock {

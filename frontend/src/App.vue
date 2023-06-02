@@ -31,9 +31,9 @@ const user = computed(() => store.user)
 
 <style scoped>
 .animate__animated.animate__slideInRight {
-  --animate-duration: 0.5s;
+  --animate-duration: 0.1s;
 }
 .animate__animated.animate__slideOutRight {
-  --animate-duration: 0.5s;
+  --animate-duration: 0.1s;
 }
 </style>

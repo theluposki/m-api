@@ -1,59 +1,63 @@
 <script setup>
 import { computed } from "vue";
-import { useUserStore } from '../../stores/user.js'
-import { useRouter } from 'vue-router'
+import { useUserStore } from "../../stores/user.js";
+import { useRouter } from "vue-router";
 
-const store = useUserStore()
+const store = useUserStore();
 
-const { push, currentRoute} = useRouter()
+const { push, currentRoute } = useRouter();
 
-const pathname = computed(() => currentRoute.value.fullPath)
+const pathname = computed(() => currentRoute.value.fullPath);
 
-const user = computed(() => store.user)
+const user = computed(() => store.user);
 
 const setLink = (link) => {
-  push(link)
-  store.setIsVisibleMenu()
-}
+  push(link);
+  store.setIsVisibleMenu();
+};
 
 const signOut = () => {
-  store.signOut()
-  store.setIsVisibleMenu()
-}
-
+  store.signOut();
+  store.setIsVisibleMenu();
+};
 </script>
 
 <template>
   <nav class="nav">
-
-    <div 
-      :class="pathname === '/' ? 'nav-link active' : 'nav-link' " 
+    <div
+      :class="pathname === '/' ? 'nav-link active' : 'nav-link'"
       @click="setLink('/')"
-      >
-      <i class='bx bx-home-alt' ></i>
+    >
+      <i class="bx bx-home-alt"></i>
       <span>Início</span>
     </div>
 
-    <div 
-      :class="pathname === '/contacts' ? 'nav-link active' : 'nav-link' "
+    <div
+      :class="
+        pathname === '/contacts/list' ||
+        pathname === '/contacts/add' ||
+        pathname === '/contacts/chat'
+          ? 'nav-link active'
+          : 'nav-link'
+      "
       @click="setLink('/contacts/list')"
-      >
-      <i class='bx bxs-contact' ></i>
+    >
+      <i class="bx bxs-contact"></i>
       <span>Contatos</span>
     </div>
 
-    <div 
-      :class="pathname === '/about' ? 'nav-link active' : 'nav-link' "
+    <div
+      :class="pathname === '/about' ? 'nav-link active' : 'nav-link'"
       @click="setLink('/about')"
-      >
-      <i class='bx bx-info-square'></i>
+    >
+      <i class="bx bx-info-square"></i>
       <span>Sobre</span>
     </div>
 
     <div class="opt">
       <div class="btnLogout" @click="signOut">
         <span>Sair</span>
-        <i class='bx bxs-log-out' ></i>
+        <i class="bx bxs-log-out"></i>
       </div>
     </div>
   </nav>
@@ -94,7 +98,7 @@ const signOut = () => {
 }
 
 .nav-link:hover {
-  transition: all ease .2s;
+  transition: all ease 0.2s;
   box-shadow: 0 0 1px var(--blue-l);
   transform: translateX(1px);
   color: var(--blue-l);
@@ -106,7 +110,7 @@ const signOut = () => {
 }
 
 .active:hover {
-  transition: all ease .2s;
+  transition: all ease 0.2s;
   box-shadow: 0 0 1px var(--blue-l);
   transform: translateX(1px);
   color: var(--dark);
@@ -139,7 +143,7 @@ const signOut = () => {
 }
 
 .btnLogout:hover {
-  transition: all ease .4s;
+  transition: all ease 0.4s;
   color: var(--white);
 }
 
@@ -154,5 +158,4 @@ const signOut = () => {
 .btnLogout i {
   font-size: 2.6rem;
 }
-
 </style>

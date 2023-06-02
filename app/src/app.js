@@ -10,6 +10,10 @@ import registerLimit from "./middlewares/registerLimit.js"
 import error from "./middlewares/error.js"
 
 /* Import Routes*/
+
+import AuthRouter from './routes/auth.js'
+
+/* App */
 const app = express()
 const v1 = "/api/v1"
 
@@ -25,7 +29,7 @@ app.use(express.json())
 app.use("/", express.static("src/public"))
 
 /* Routes */
-
+app.use(`${v1}/auth`, AuthRouter)
 
 app.use(error)
 /* Export App */

@@ -50,7 +50,7 @@ const setLink = (link) => {
   background-color: var(--dark2);
   border: solid 1px #555;
   box-shadow: 0 0 13px var(--dark);
-  width: calc(100% - 68px);
+  width: 138px;
   min-height: 50px;
   z-index: 9000;
 

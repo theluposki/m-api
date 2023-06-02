@@ -7,7 +7,7 @@ import { cpus } from "node:os"
 import { IO } from './socket.io.js'
 
 dotenv.config()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.APP_PORT || 3000
 
 const options = {
   key: readFileSync("./server.key"),
@@ -21,7 +21,7 @@ IO(server)
 if (cluster.isPrimary) {
   const numCpu = cpus().length + 2
 //   const numCpu = 1
-  console.log(`\n\nPrimary process is running -> listening at 🚀 https://localhost:${PORT} 🚀`);
+  console.log(`\n\nPrimary process -> pid: ${process.pid} is running -> \n\n⚙️ -Listening at 🚀 https://127.0.0.1:${PORT} 🚀\n`);
   console.log(`Primary cluster setting up ${numCpu} workers...\n`)
 
   for (let i = 0; i < numCpu; i++) {
