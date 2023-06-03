@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, onMounted } from 'vue';
+import { signInRepo } from '../repositories/user.js'
+import { encryptValue, decryptValue } from '../crypto/index.js'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref({})
@@ -36,29 +38,24 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  const userMock = {
-    id: "2792e9b0-aec1-4f62-88ff-1d1bfcdd49d2",
-    nickname: "Jon Doe",
-    picture: "https://randomuser.me/api/portraits/men/31.jpg",
-    bio: "",
-    links: [],
-    created_at: "2023-05-19T12:34:01.000Z",
-    updated_at: "2023-05-19T12:34:01.000Z",
-  }
+  
 
   onMounted(() => {
     if(localStorage.getItem("user-connected")) {
-      user.value = JSON.parse(localStorage.getItem("user-connected"))
+      user.value = JSON.parse(decryptValue(localStorage.getItem("user-connected")))
     }
   })
 
   async function signIn(email, password) {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    console.log(email, password)
-    user.value = userMock
-    localStorage.setItem("user-connected", JSON.stringify(userMock))
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    const response = await signInRepo(email,password)
+
+    if(response.error) return response
+
+    user.value = response.user
+    localStorage.setItem("user-connected", encryptValue(JSON.stringify(response.user)))
     setIsVisibleLogin()
-    return "autenticado com sucesso!"
+    return response.user
   }
 
   async function signUp(name, email, password) {
@@ -68,7 +65,7 @@ export const useUserStore = defineStore('user', () => {
   
   async function signOut() {
     user.value = {}
-    localStorage.removeItem("user-connected")
+    localStorage.removeItem("user-connected");
   }
   
   return { 

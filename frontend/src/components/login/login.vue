@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import Loading from '../loading.vue'
-const email = ref("")
-const password = ref("")
+const email = ref("mo@mail.com")
+const password = ref("1234")
 const lock = ref(true)
 const check = ref(false)
 const message = ref("")
@@ -27,11 +27,15 @@ const toggleLock = () => {
 const signIn = async () => {
   loading.value = true
   const result = await store.signIn(email.value, password.value)
-  if(result) {
+
+  if(result.error) {
     loading.value = false
-    message.value = result.message
-    console.log(result)
+    message.value = result.error
+    return 
   }
+
+  message.value = ""
+  loading.value = false
 }
 </script>
 

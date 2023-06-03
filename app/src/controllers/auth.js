@@ -7,7 +7,7 @@ const auth = async (req, res) => {
   if(result.error) return res.status(400).json(result)
 
   res.cookie('token', result.token, { httpOnly: true, secure: true, sameSite: 'none' });
-  res.status(200).json(result.message)
+  res.status(200).json(result)
 }
 
 export default auth

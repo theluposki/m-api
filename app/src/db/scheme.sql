@@ -82,3 +82,10 @@ FROM user_profiles up JOIN friends f ON up.user_id = f.user2_id
 WHERE
 f.user1_id = "884390d6-7bff-463f-9475-3f4d863d8bae"
 OR f.user2_id = "884390d6-7bff-463f-9475-3f4d863d8bae";
+
+
+https://i.pravatar.cc/150?img=38
+
+UPDATE user_profiles
+SET picture = 'https://i.pravatar.cc/150?img=38'
+WHERE id = 'eaad3397-f392-48bf-9989-21fa0f6a2fba';

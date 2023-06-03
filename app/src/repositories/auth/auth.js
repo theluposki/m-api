@@ -40,7 +40,16 @@ const auth = async (body) => {
       privateKey,
       { algorithm: "RS256" }
     );
-    return { message: "Autenticado com sucesso!", token };
+
+    const profile = await conn.query(
+      `SELECT p.id, u.nickname, p.name, p.bio, p.picture, p.links, p.created_at
+      FROM users u
+      INNER JOIN user_profiles p ON u.id = p.user_id WHERE u.id = ?;
+      `,
+      [userId]
+    );
+
+    return { user: profile[0], message: "Autenticado com sucesso!", token };
   } catch (error) {
     if (error) return { error: "Erro ao autenticar" };
   } finally {
