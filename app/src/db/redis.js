@@ -1,10 +1,9 @@
 import { createClient } from 'redis';
 
-const redisClient = createClient({ url: 'redis://redis:6379' });
+const redisClient = createClient({ url: `${process.env.REDIS_HOST}:${process.env.REDIS_PORT}` });
 
 await redisClient.connect();
-// host: process.env.REDIS_HOST,
-// port: process.env.REDIS_PORT
+
 redisClient.on("connect", () => {
   console.log("[ Redis ] -> Conectado ao servidor Redis.");
 });
