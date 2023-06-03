@@ -5,13 +5,15 @@ import { useUserStore } from '../../stores/user.js'
 const store = useUserStore()
 
 const user = computed(() => store.user)
+
+const userCountUpdate = computed(() => store.userCountUpdate)
 </script>
 
 <template>
   <footer class="footer">
     <div class="users-conected">
       <i class='bx bxs-user' v-if="user.nickname"></i> 
-      <span v-if="user.nickname">0</span>
+      <span v-if="user.nickname">{{ userCountUpdate }}</span>
     </div>
     <span class="copy">&copy; 2023 MyReb. Todos os direitos reservados.</span>
   </footer>

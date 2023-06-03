@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import { redisClient } from "./db/redis.js";
 
 export const IO = (server) => {
   const io = new Server(server, {
@@ -9,48 +10,57 @@ export const IO = (server) => {
     },
   });
 
-  const socketNicknameMap = {};
+  io.on("connection", async (socket) => {
+    // Evento de conexão do Socket.IO
 
-  io.on('connection', (socket) => {
-    // When a user connects, store the nickname and socket ID
-    console.log("connected: ", socket.id)
+    socket.on("login", async (nickname) => {
+      const socketId = socket.id;
 
-    socket.on('setNickname', (nickname) => {
-      if (socketNicknameMap[nickname]) {
-        delete socketNicknameMap[nickname];
-        socketNicknameMap[nickname] = socket.id;
-        console.log(nickname)
-      } else {
-        socketNicknameMap[nickname] = socket.id;
-        console.log(nickname)
-      }
-
-      socket.emit("salutation", `Seja Bem-vindo ${nickname}`);
-
-      io.emit("clients-conected", Object.keys(socketNicknameMap).length);
-    });
-
-    // Send a message to a socket based on the nickname
-    socket.on('sendMessageToNickname', (data) => {
-      const socketId = socketNicknameMap[data.to];
-
-      if (socketId) {
-        io.to(socketId).emit('messageReceived', data);
-      } else {
-        console.log("não foi encontrado esse socket")
-        console.log(socketNicknameMap, process.pid)
-        console.log(socketId)
-      }
-    });
-
-    // Handle a user's disconnection
-    socket.on('disconnect', () => {
-      // Remove the nickname and socket ID from the mapping
-      Object.entries(socketNicknameMap).forEach(([nickname, socketId]) => {
-        if (socketId === socket.id) {
-          delete socketNicknameMap[nickname];
+      try {
+        // Verificar se o nickname já está em uso
+        const existingUser = await redisClient.get(`nickname:${nickname}`);
+        if (existingUser) {
+          console.log(`Usuário ${nickname} já está logado.`);
+          const onlineUserCount = await redisClient.get("onlineUserCount");
+          io.emit("userCountUpdate", onlineUserCount);
+          return;
         }
-      });
+
+        // Armazenar o nickname do usuário vinculado ao socketId no Redis
+        await redisClient.set(`nickname:${nickname}`, socketId);
+        console.log(`Usuário ${nickname} conectado.`);
+
+        // Incrementar a contagem de usuários logados
+        await redisClient.incr("onlineUserCount");
+
+        // Emitir evento com a contagem atualizada para todos os clientes
+        const onlineUserCount = await redisClient.get("onlineUserCount");
+        io.emit("userCountUpdate", onlineUserCount);
+
+        // Resto do código após o login
+
+        socket.on("disconnect", async () => {
+          try {
+            // Evento de desconexão do cliente
+            // Remover o nickname do Redis
+            await redisClient.del(`nickname:${nickname}`);
+
+            // Decrementar a contagem de usuários logados
+            await redisClient.decr("onlineUserCount");
+            console.log(`Usuário ${nickname} desconectado.`);
+
+            // Emitir evento com a contagem atualizada para todos os clientes
+            const onlineUserCount = await redisClient.get("onlineUserCount");
+            io.emit("userCountUpdate", onlineUserCount);
+          } catch (error) {
+            console.error("Erro ao remover nickname do Redis:", error);
+          }
+        });
+      } catch (error) {
+        console.error("Erro ao armazenar nickname no Redis:", error);
+        console.log("[ Redis ] -> Cliente desconectado.");
+        await redisClient.disconnect();
+      }
     });
   });
 };

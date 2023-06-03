@@ -2,13 +2,26 @@ import { defineStore } from 'pinia'
 import { ref, onMounted } from 'vue';
 import { signInRepo } from '../repositories/user.js'
 import { encryptValue, decryptValue } from '../crypto/index.js'
+import { io } from 'socket.io-client';
+import config from '../config/index.js';
 
 export const useUserStore = defineStore('user', () => {
   const user = ref({})
   const isVisibleLogin = ref(false);
   const isVisibleLogup = ref(false);
+  const userCountUpdate = ref(0)
 
   const isVisibleMenu = ref(false);
+
+  console.log(config.BASE_URL_SOCKET)
+
+  const socket = io(config.BASE_URL_SOCKET, {
+    transports: ['websocket']
+  })
+
+  socket.on("userCountUpdate", (data) => {
+    userCountUpdate.value = data
+  })
 
   const setIsVisibleLogin = () => {
     if (isVisibleLogin.value) {
@@ -38,11 +51,10 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  
-
   onMounted(() => {
     if(localStorage.getItem("user-connected")) {
       user.value = JSON.parse(decryptValue(localStorage.getItem("user-connected")))
+      socket.emit("login", user.value.nickname)
     }
   })
 
@@ -55,6 +67,7 @@ export const useUserStore = defineStore('user', () => {
     user.value = response.user
     localStorage.setItem("user-connected", encryptValue(JSON.stringify(response.user)))
     setIsVisibleLogin()
+    socket.emit("login", user.value.nickname)
     return response.user
   }
 
@@ -78,6 +91,7 @@ export const useUserStore = defineStore('user', () => {
     setIsVisibleLogin,
     setIsVisibleLogup,
     isVisibleMenu,
-    setIsVisibleMenu, 
+    setIsVisibleMenu,
+    userCountUpdate 
   }
 })
