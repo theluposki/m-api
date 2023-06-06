@@ -1,10 +1,20 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { getMyFriends } from '../../repositories/profiles.js'
 import { useUserStore } from '../../stores/user.js'
+import { useChatStore } from "../../stores/chat.js";
 
+import { useRouter } from "vue-router";
+
+const { push } = useRouter();
+
+const store = useChatStore();
 const { signOut } = useUserStore()
 
+const setConversation = (friend) => {
+  push('/contacts/chat');
+  store.setCurrentChat(friend)
+};
 
 const friends = ref([])
 const search = ref("")
@@ -33,8 +43,6 @@ const getMyFriend = async () => {
   friends.value = response
 }
 
-
-
 </script>
 <template>
   <div class="page">
@@ -46,7 +54,7 @@ const getMyFriend = async () => {
     </header>
 
     <ul class="list">
-      <li v-for="item in friends" :key="item.id" class="list-item">
+      <li v-for="item in friends" :key="item.id" @click="setConversation(item)" class="list-item">
         <div class="left">
         <img :src="item.picture" alt="image profile" loading="lazy">
         <span class="nickname">{{ item.nickname }}</span>
@@ -155,6 +163,18 @@ button:active {
 
   padding: 0 4px;
   border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  border: solid 2px transparent;
+}
+
+.list-item:hover {
+  transition: all ease .2s;
+  border-radius: 10px 5px 5px 10px;
+  border-right: solid 3px var(--blue-l);
+}
+.list-item:active {
+  scale: 0.96;
 }
 
 .list-item img {

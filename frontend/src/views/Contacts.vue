@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { useChatStore } from "../stores/chat.js";
-import HeaderContacts from "../components/chat/header.vue";
+import NavigationContacts from "../components/chat/navigation.vue";
 
 const store = useChatStore();
 
@@ -15,7 +15,7 @@ const isVisibleMenuChat = computed(() => store.isVisibleMenuChat);
       leave-active-class="animate__animated animate__slideOutRight"
       mode="out-in"
     >
-      <HeaderContacts v-if="isVisibleMenuChat" />
+      <NavigationContacts v-if="isVisibleMenuChat" />
     </transition>
 
     <div class="btnHeader" @click="store.setIsVisibleMenuChat">
@@ -49,15 +49,13 @@ const isVisibleMenuChat = computed(() => store.isVisibleMenuChat);
   right: 0;
 
   margin: 4px;
-  background-color: var(--dark2);
-  box-shadow: 0 0 13px var(--dark);
-  border: solid 1px #555;
+  background-color: transparent;
   width: 50px;
   min-height: 50px;
   z-index: 9000;
   cursor: pointer;
 
-  border-radius: 4px;
+  border-radius: 50%;
 
   display: flex;
   align-items: center;
@@ -68,7 +66,7 @@ const isVisibleMenuChat = computed(() => store.isVisibleMenuChat);
 }
 
 .btnHeader:hover {
-  box-shadow: 0 0 1px var(--blue-l);
+  box-shadow: 0 0 1px #555;
 }
 .btnHeader:active {
   scale: 0.9;

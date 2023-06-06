@@ -1,44 +1,44 @@
 <script setup>
-import { computed, onBeforeUnmount, onBeforeMount} from "vue";
-import { useChatStore } from "../../stores/chat.js";
-import { useRouter } from "vue-router";
 
-const { push } = useRouter();
-const store = useChatStore();
-
-const friend = computed(() => store.currentChat)
-
-const back = () => push('/contacts/list')
 </script>
 
 <template>
-  <header class="header">
+  <footer class="footer">
     <div class="left">
-      <button class="btn-muted" @click="back">
-        <i class="bx bx-arrow-back"></i>
+      <button class="btn-muted">
+        <i class='bx bxs-grid' ></i>
       </button>
-      <img :src="friend.picture" alt="imagem friend" />
+      <button class="btn-muted">
+        <i class='bx bx-wink-smile'></i>
+      </button>
     </div>
-    <span>{{ friend.nickname }}</span>
-  </header>
+
+    <div class="right">
+      <textarea placeholder="Mensagem"></textarea>
+      <button>
+        <i class='bx bx-send' ></i>
+      </button>
+    </div>
+
+  </footer>
 </template>
 
 <style scoped>
-.header {
-  width: calc(100%);
-  min-height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: solid 1px #555;
-  gap: 12px;
-  padding: 0 68px 0 12px;
+.input, textarea {
+  width: 100%;
+  min-height: 40px;
+  background-color: transparent;
+  border: solid 1px transparent;
+  border-bottom: solid 1px var(--blue-l);
+  color: var(--white);
+  caret-color: var(--blue-l);
+  font-size: 1.6rem;
+  outline: none;
+  resize: none;
 }
 
-.header img {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
+.input::placeholder, textarea::placeholder {
+  color: #555;
 }
 
 button {
@@ -48,16 +48,15 @@ button {
   border: solid 1px var(--dark);
   background-color: var(--blue-l);
   color: var(--dark);
-  padding: 0;
+  padding: 0px;
 
   border-radius: 50%;
-  font-weight: 700;
   cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.9rem;
 }
 
 .btn-muted {
@@ -93,11 +92,23 @@ button:active {
 }
 
 .right {
+  flex-grow: 1;
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 0 12px;
 }
 
+.footer {
+  width: calc(100%);
+  min-height: 60px;
+  max-height: 60px;
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: solid 1px #555;
+  gap: 12px;
+  padding: 0 12px;
+}
 </style>

@@ -3,8 +3,15 @@ import { ref } from 'vue';
 
 export const useChatStore = defineStore('chat', () => {
   const currentChat = ref({})
-
   const isVisibleMenuChat = ref(false);
+
+  const setCurrentChat = (friend) => {
+    currentChat.value = friend
+  }
+
+  const removeCurrentChat = (friend) => {
+    currentChat.value = {}
+  }
 
   const setIsVisibleMenuChat = () => {
     if (isVisibleMenuChat.value) {
@@ -16,7 +23,9 @@ export const useChatStore = defineStore('chat', () => {
 
   return {
     currentChat,
+    setCurrentChat,
     isVisibleMenuChat, 
-    setIsVisibleMenuChat
+    setIsVisibleMenuChat,
+    removeCurrentChat
   }
 })
