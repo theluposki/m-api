@@ -5,17 +5,32 @@ import {
   confirmFriendRequest,
 } from "../../repositories/profiles.js";
 const friendsRequests = ref([]);
+import { useUserStore } from '../../stores/user.js'
+
+const { signOut } = useUserStore()
 
 onMounted(async () => {
   await loadGetFriendRequests()
 });
 
 const loadGetFriendRequests = async () => {
+  const response = await getFriendRequest()
+
+  if(response === 401) {
+    console.log(response)
+    return signOut()
+  }
+
   friendsRequests.value = await getFriendRequest();
 }
 
 const confirmRequest = async (nickname, requestId, item) => {
-  await confirmFriendRequest(nickname, requestId);
+  const response = await confirmFriendRequest(nickname, requestId);
+
+  if(response === 401) {
+    console.log(response)
+    return signOut()
+  }
 
   item.success = true
   setTimeout(async () => {

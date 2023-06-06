@@ -59,7 +59,6 @@ const sendFriendRequest = async (nickname) => {
     const result = await response.json();
 
     if (result.error) return result;
-    console.log(result);
     return result;
   } catch (error) {
     console.error(error);
@@ -92,7 +91,6 @@ const confirmFriendRequest = async (nickname, requestId) => {
     const result = await response.json();
 
     if (result.error) return result;
-    console.log(result);
     return result;
   } catch (error) {
     console.error(error);
@@ -122,7 +120,35 @@ const getFriendRequest = async () => {
     const result = await response.json();
 
     if (result.error) return result;
-    console.log(result);
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getMyFriends = async () => {
+  const url = `${config.BASE_URL}/users/my-friends`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrerPolicy: "origin",
+    });
+
+    if (response.status === 401) {
+      alert("Sua sessão expirou, Faça login para continuar.");
+      return 401;
+    }
+
+    const result = await response.json();
+
+    if (result.error) return result;
     return result;
   } catch (error) {
     console.error(error);
@@ -134,4 +160,5 @@ export {
   sendFriendRequest,
   confirmFriendRequest,
   getFriendRequest,
+  getMyFriends,
 };

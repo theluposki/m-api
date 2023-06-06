@@ -6,8 +6,6 @@ import { useUserStore } from '../../stores/user.js'
 const { signOut } = useUserStore()
 
 const search = ref("") 
-const success = ref(false)
-
 
 const friendsRequests = ref([])
 
@@ -28,8 +26,6 @@ const sendRequestToFriend = async (nickname, item) => {
 
   const response = await sendFriendRequest(nickname)
 
-  console.log(response)
-
   if(response === 401) {
     console.log(response)
     return signOut()
@@ -37,7 +33,6 @@ const sendRequestToFriend = async (nickname, item) => {
   // console.log(response)
   if(response.status === 200) {
     item.success = true;
-    console.log(response.message)
   }
 }
 
@@ -47,7 +42,7 @@ const sendRequestToFriend = async (nickname, item) => {
 <template>
   <div class="page">
    <header class="header">
-    <input type="text" @keyup.enter="searchFn" v-model="search" class="input" placeholder="procurar amigo">
+    <input type="text" @keyup.enter="searchFn" v-model="search" class="input" placeholder="procurar nova amizade">
     <button @click="searchFn">
       <i class='bx bx-search'></i>
     </button>

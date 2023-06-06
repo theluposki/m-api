@@ -5,8 +5,6 @@ function generateHash (data) {
   return CryptoJS.SHA256(data).toString();
 };
 
-console.log(generateHash("luposki"))
-
 function encryptValue(value) {
   const encryptedValue = CryptoJS.AES.encrypt(value, generateHash(config.SECRETKEY)).toString();
   return encryptedValue;

@@ -13,8 +13,6 @@ export const useUserStore = defineStore('user', () => {
 
   const isVisibleMenu = ref(false);
 
-  console.log(config.BASE_URL_SOCKET)
-
   const socket = io(config.BASE_URL_SOCKET, {
     transports: ['websocket']
   })
@@ -72,7 +70,6 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function signUp(name, email, password) {
-    console.log(name, email, password)
     setIsVisibleLogup()
   }
   

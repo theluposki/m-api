@@ -8,8 +8,12 @@ const getMyFriends = async (userId) => {
 
     const friends = await conn.query(
       `
-      SELECT f.id, up.nickname, up.picture
-      FROM user_profiles up JOIN friends f ON up.user_id = f.user2_id
+      SELECT f.id, u.nickname, up.picture
+      FROM user_profiles AS up 
+      INNER JOIN friends AS f 
+      ON up.user_id = f.user2_id
+      INNER JOIN users as u
+      ON up.user_id = u.id
       WHERE
       f.user1_id = ?;
       `,
