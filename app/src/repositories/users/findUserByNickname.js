@@ -6,7 +6,8 @@ const findUserByNickname = async (nickname) => {
   try {
     conn = await db.getConnection();
     const users = await conn.query(
-      `select id, nickname, bio, picture, links from user_profiles where nickname like ?`,
+      `select up.id, u.nickname, up.picture 
+      from user_profiles as up INNER JOIN users as u ON u.id = up.user_id where nickname like ?`,
       [`${nickname}%`]
     );
     return users;

@@ -1,21 +1,76 @@
 <script setup>
+import { ref } from  'vue'
+import { searchUsersByNickname, sendFriendRequest } from '../../repositories/profiles.js'
+import { useUserStore } from '../../stores/user.js'
+
+const { signOut } = useUserStore()
+
+const search = ref("") 
+const success = ref(false)
+
+
+const friendsRequests = ref([])
+
+const searchFn = async () => {
+  if(!search.value) return
+  const response = await searchUsersByNickname(search.value)
+
+  if(response === 401) {
+    console.log(response)
+    return signOut()
+  }
+
+  friendsRequests.value = response
+}
+
+const sendRequestToFriend = async (nickname, item) => {
+  if(!nickname) return
+
+  const response = await sendFriendRequest(nickname)
+
+  console.log(response)
+
+  if(response === 401) {
+    console.log(response)
+    return signOut()
+  }
+  // console.log(response)
+  if(response.status === 200) {
+    item.success = true;
+    console.log(response.message)
+  }
+}
+
 
 </script>
+
 <template>
   <div class="page">
    <header class="header">
-    <input type="text" class="input" placeholder="procurar amigo">
-    <button>
+    <input type="text" @keyup.enter="searchFn" v-model="search" class="input" placeholder="procurar amigo">
+    <button @click="searchFn">
       <i class='bx bx-search'></i>
     </button>
    </header>
 
    <ul class="list">
-    <li class="list-item">
-      <img src="https://i.pravatar.cc/150?img=38" alt="image profile" loading="lazy">
-      <span class="nickname">Monique</span>
+     <li v-for="item in friendsRequests" :key="item.id" class="list-item">
+      <div class="left">
+        <img :src="item.picture" alt="image profile" loading="lazy">
+        <span class="nickname">{{ item.nickname }}</span>
+      </div>
+
+      <div class="right">
+        <button v-if="!item.success" class="btn-success" @click="sendRequestToFriend(item.nickname, item)">
+          <i class='bx bx-user-plus'></i>
+        </button>
+        <button v-if="item.success">
+          <i class='bx bx-check'></i>
+        </button>
+      </div>
     </li>
-   </ul>
+  </ul>
+
   </div>
 </template>
 
@@ -65,6 +120,24 @@ button {
   font-size: 1.6rem;
 }
 
+.btn-muted {
+  background-color: var(--dark2);
+  border: solid 1px #555;
+  color: #555;
+}
+
+.btn-muted:hover, .btn-success:hover {
+  transition: all ease .4s;
+  border: solid 1px var(--blue-l);
+  color: var(--blue-l);
+}
+
+.btn-success {
+  background-color: var(--dark2);
+  border: solid 1px #555;
+  color: var(--white);
+}
+
 button:hover {
   transition: all ease .2s;
   opacity: 0.95;
@@ -80,12 +153,18 @@ button:active {
   overflow-x: hidden;
   overflow-y: auto;
   padding: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 .list-item {
   background-color: var(--dark);
   min-height: 60px;
+
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
 
   padding: 0 4px;
@@ -99,12 +178,6 @@ button:active {
 
   border-radius: 10px;
   box-shadow: 0 0 2px #555;
-}
-
-.list-item img:hover {
-  transition: all ease .8s;
-  max-width: 250px;
-  max-height: 250px;
   cursor: pointer;
 }
 
@@ -112,5 +185,17 @@ button:active {
   font-weight: bold;
 }
 
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+}
 
 </style>

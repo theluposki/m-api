@@ -37,6 +37,13 @@ const setLink = (link) => {
     >
       <i class="bx bx-list-plus"></i>
     </div>
+    <div
+      class="nav-link"
+      :class="pathname === '/contacts/friend-requests' ? 'nav-link active' : 'nav-link'"
+      @click="setLink('/contacts/friend-requests')"
+    >
+    <i class='bx bx-user-pin'></i>
+    </div>
   </header>
 </template>
 
@@ -50,7 +57,7 @@ const setLink = (link) => {
   background-color: var(--dark2);
   border: solid 1px #555;
   box-shadow: 0 0 13px var(--dark);
-  width: 138px;
+  width: 178px;
   min-height: 50px;
   z-index: 9000;
 

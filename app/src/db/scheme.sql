@@ -89,3 +89,14 @@ https://i.pravatar.cc/150?img=38
 UPDATE user_profiles
 SET picture = 'https://i.pravatar.cc/150?img=38'
 WHERE id = 'eaad3397-f392-48bf-9989-21fa0f6a2fba';
+
+
+SELECT fr.id, u.nickname, up.picture, fr.status 
+FROM user_profiles AS up 
+INNER JOIN friend_requests AS fr 
+ON up.user_id = fr.sender_id 
+INNER JOIN users AS u 
+ON u.id = up.user_id 
+WHERE fr.recipient_id = "f0b12100-f1d4-45a5-b8aa-3e065fb745c7" 
+AND fr.status = 'pending';
+
