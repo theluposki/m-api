@@ -54,3 +54,5 @@ CREATE TABLE friends (
   FOREIGN KEY (user1_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (user2_id) REFERENCES users(id) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ 

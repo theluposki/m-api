@@ -1,5 +1,27 @@
 <script setup>
+import { ref, computed, onMounted} from 'vue'
+import { useUserStore } from '../../stores/user';
+import { useChatStore } from '../../stores/chat';
 
+const storeUser = useUserStore()
+const storeChat = useChatStore()
+
+const input = ref("")
+const user = computed(() => storeUser.user)
+const friend = computed(() => storeChat.currentChat)
+
+const sendMessage = () => {
+  const data = {
+    id: window.crypto.randomUUID(),
+    sender: user.value.nickname,
+    receiver: friend.value.nickname,
+    message: input.value,
+    createdAt: Date.now(),
+  }
+  console.log("data: ", data.receiver)
+  storeUser.socket.emit("sendMessage", data)
+  input.value = ""
+}
 </script>
 
 <template>
@@ -14,8 +36,8 @@
     </div>
 
     <div class="right">
-      <textarea placeholder="Mensagem"></textarea>
-      <button>
+      <textarea v-model="input" @keyup.enter="sendMessage" placeholder="Mensagem"></textarea>
+      <button @click="sendMessage">
         <i class='bx bx-send' ></i>
       </button>
     </div>

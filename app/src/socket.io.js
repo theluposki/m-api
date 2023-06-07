@@ -17,11 +17,13 @@ export const IO = (server) => {
       try {
         socket.on("disconnect", async () => {
           try {
-            await redisClient.del(`nickname:${nickname}`);
-            await redisClient.decr("onlineUserCount");
-            console.log(`Usuário ${nickname} desconectado.`);
-    
             const onlineUserCount = await redisClient.get("onlineUserCount");
+            await redisClient.del(`nickname:${nickname}`);
+            console.log(`Usuário ${nickname} desconectado.`);
+            
+            if(onlineUserCount <= 0) return 
+            
+            await redisClient.decr("onlineUserCount");
             io.emit("userCountUpdate", onlineUserCount);
             
           } catch (error) {
@@ -48,6 +50,19 @@ export const IO = (server) => {
         io.emit("userCountUpdate", onlineUserCount);
 
         // Resto do código após o login
+        socket.on('sendMessage', async (data) => {
+          
+          const mySocketId = await redisClient.get(`nickname:${data.sender}`);
+          const socketId = await redisClient.get(`nickname:${data.receiver}`);
+          
+          if (mySocketId && socketId) {
+            io.to(mySocketId).emit('messageReceived', data);
+            io.to(socketId).emit('messageReceived', data);
+          } else {
+            console.log("não foi encontrado esse socket")
+            console.log(socketId)
+          }
+        });
 
       } catch (error) {
         console.error("Erro ao armazenar nickname no Redis:", error);
@@ -59,6 +74,7 @@ export const IO = (server) => {
     socket.on("disconnect", async () => {
       try {
         const onlineUserCount = await redisClient.get("onlineUserCount");
+        if(onlineUserCount <= 0) return 
         io.emit("userCountUpdate", onlineUserCount);
       } catch (error) {
         console.error("Erro ao remover nickname do Redis:", error);

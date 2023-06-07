@@ -89,6 +89,7 @@ export const useUserStore = defineStore('user', () => {
     setIsVisibleLogup,
     isVisibleMenu,
     setIsVisibleMenu,
-    userCountUpdate 
+    userCountUpdate,
+    socket 
   }
 })

@@ -20,7 +20,7 @@ IO(server)
 
 if (cluster.isPrimary) {
   const numCpu = cpus().length + 2
-//   const numCpu = 1
+  // const numCpu = 1
   console.log(`\n\nPrimary process -> pid: ${process.pid} is running -> \n\n⚙️ -Listening at 🚀 https://127.0.0.1:${PORT} 🚀\n`);
   console.log(`Primary cluster setting up ${numCpu} workers...\n`)
 
